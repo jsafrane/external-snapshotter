@@ -317,6 +317,8 @@ type VolumeSnapshotContentSpec struct {
 	// For dynamically provisioned snapshots, this field will automatically be filled in by the
 	// CSI snapshotter sidecar with the "DeletionPolicy" field defined in the corresponding
 	// VolumeSnapshotClass.
+	// If this VolumeSnapshotContent is part of a VolumeGroupSnapshotContent, then this field is ignored
+	// and VolumeGroupSnapshotContent's deletion policy is used instead.
 	// For pre-existing snapshots, users MUST specify this field when creating the
 	//  VolumeSnapshotContent object.
 	// Required.
