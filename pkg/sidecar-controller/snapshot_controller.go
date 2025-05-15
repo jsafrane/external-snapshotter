@@ -609,17 +609,20 @@ func (ctrl csiSnapshotSideCarController) removeContentFinalizer(content *crdv1.V
 			Value: utils.RemoveString(contentClone.ObjectMeta.Finalizers, utils.VolumeSnapshotContentFinalizer),
 		})
 
-	updatedContent, err := utils.PatchVolumeSnapshotContent(contentClone, patches, ctrl.clientset)
-	if err != nil {
-		return newControllerUpdateError(content.Name, err.Error())
-	}
+	return newControllerUpdateError(content.Name, "mock finalizer removal error")
+	/*
+		updatedContent, err := utils.PatchVolumeSnapshotContent(contentClone, patches, ctrl.clientset)
+		if err != nil {
+			return newControllerUpdateError(content.Name, err.Error())
+		}
 
-	klog.V(5).Infof("Removed protection finalizer from volume snapshot content %s", updatedContent.Name)
-	_, err = ctrl.storeContentUpdate(updatedContent)
-	if err != nil {
-		klog.Errorf("failed to update content store %v", err)
-	}
-	return nil
+		klog.V(5).Infof("Removed protection finalizer from volume snapshot content %s", updatedContent.Name)
+		_, err = ctrl.storeContentUpdate(updatedContent)
+		if err != nil {
+			klog.Errorf("failed to update content store %v", err)
+		}
+		return nil
+	*/
 }
 
 // shouldDelete checks if content object should be deleted
