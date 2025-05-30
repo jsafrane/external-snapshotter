@@ -19,6 +19,7 @@ package sidecar_controller
 import (
 	"context"
 	"fmt"
+	"os"
 	"slices"
 	"strings"
 	"time"
@@ -513,6 +514,10 @@ func (ctrl *csiSnapshotSideCarController) updateSnapshotContentStatus(
 				Path:  "/status",
 				Value: newStatus,
 			},
+		}
+		if _, err := os.Stat("/tmp/update-error"); err == nil {
+			// Simulate a controller update error
+			return contentObj, fmt.Errorf("mock error")
 		}
 
 		newContent, err := utils.PatchVolumeSnapshotContent(contentClone, patches, ctrl.clientset, "status")
