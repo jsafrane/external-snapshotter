@@ -28,6 +28,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/tools/cache"
 	klog "k8s.io/klog/v2"
 
@@ -577,6 +578,8 @@ func (ctrl csiSnapshotSideCarController) removeAnnVolumeGroupSnapshotBeingCreate
 	return updatedGroupSnapshotContent, nil
 }
 
+var errorCounter = 0
+
 func (ctrl *csiSnapshotSideCarController) updateGroupSnapshotContentStatus(
 	groupSnapshotContent *crdv1beta2.VolumeGroupSnapshotContent,
 	groupSnapshotHandle string,
@@ -642,6 +645,15 @@ func (ctrl *csiSnapshotSideCarController) updateGroupSnapshotContentStatus(
 	}
 
 	if updated {
+		if errorCounter < 2 {
+			errorCounter++
+			err := errors.NewConflict(
+				schema.GroupResource{Group: "groupsnapshot.csi.storage.k8s.io", Resource: "volumegroupsnapshotcontents"},
+				groupSnapshotContent.Name,
+				fmt.Errorf("MOCK error %d", errorCounter),
+			)
+			return groupSnapshotContentObj, newControllerUpdateError(groupSnapshotContent.Name, err.Error())
+		}
 		groupSnapshotContentClone := groupSnapshotContentObj.DeepCopy()
 		groupSnapshotContentClone.Status = newStatus
 		newContent, err := ctrl.clientset.GroupsnapshotV1beta2().VolumeGroupSnapshotContents().UpdateStatus(context.TODO(), groupSnapshotContentClone, metav1.UpdateOptions{})
