@@ -1,3 +1,24 @@
+# Release notes for v8.7.1
+
+[Documentation](https://kubernetes-csi.github.io)
+
+## Changes by Kind
+
+### Bug or Regression
+
+- Build with Go 1.26.11 to fix CVE-2026-97054 and CVE-2026-111943. ([#1534](https://github.com/kubernetes-csi/external-snapshotter/pull/1534), [@xing-yang](https://github.com/xing-yang))
+
+## Dependencies
+
+### Added
+_Nothing has changed._
+
+### Changed
+_Nothing has changed._
+
+### Removed
+_Nothing has changed._
+
 # Release notes for v8.7.0
 
 [Documentation](https://kubernetes-csi.github.io)
